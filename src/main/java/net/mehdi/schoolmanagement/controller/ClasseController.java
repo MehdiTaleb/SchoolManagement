@@ -4,7 +4,7 @@ package net.mehdi.schoolmanagement.controller;
 import net.mehdi.schoolmanagement.model.Classe;
 import net.mehdi.schoolmanagement.model.Niveau;
 import net.mehdi.schoolmanagement.service.ClasseService;
-//import jakarta.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
