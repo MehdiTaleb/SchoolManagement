@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Détails étudiant</title>
+
+</head>
+
+<body>
+
+<h1>Détails de l'étudiant</h1>
+
+<p>
+    <strong>ID :</strong>
+    <span th:text="${student.id}"></span>
+</p>
+
+<p>
+    <strong>Nom :</strong>
+    <span th:text="${student.nom}"></span>
+</p>
+
+<p>
+    <strong>Prénom :</strong>
+    <span th:text="${student.prenom}"></span>
+</p>
+
+<p>
+    <strong>Email :</strong>
+    <span th:text="${student.email}"></span>
+</p>
+
+<p>
+    <strong>Téléphone :</strong>
+    <span th:text="${student.telephone}"></span>
+</p>
+
+<p>
+    <strong>Moyenne :</strong>
+    <span th:text="${student.average}"></span>
+</p>
+
+<p>
+    <strong>Classe :</strong>
+
+    <span th:if="${student.classe != null}"
+          th:text="${student.classe.nom}">
+    </span>
+
+    <span th:if="${student.classe == null}">
+        Aucune classe
+    </span>
+
+</p>
+
+<a th:href="@{/students}">
+    Retour à la liste
+</a>
+
+</body>
+
+</html>

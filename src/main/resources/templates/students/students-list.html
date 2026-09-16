@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des étudiants</title>
+</head>
+
+<body>
+
+<h1>Liste des étudiants</h1>
+
+<a th:href="@{/students/add}">
+    Ajouter un étudiant
+</a>
+
+<br><br>
+
+<form th:action="@{/students/search}" method="get">
+
+    <input
+            type="text"
+            name="keyword"
+            placeholder="Rechercher par nom"
+            th:value="${keyword}"
+    >
+
+    <button type="submit">
+        Rechercher
+    </button>
+
+</form>
+
+<br>
+
+<div th:if="${successMessage}"
+     th:text="${successMessage}">
+</div>
+
+<div th:if="${errorMessage}"
+     th:text="${errorMessage}">
+</div>
+
+<table border="1">
+
+    <thead>
+
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Moyenne</th>
+        <th>Classe</th>
+        <th>Actions</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr th:each="student : ${students}">
+
+        <td th:text="${student.id}"></td>
+
+        <td th:text="${student.nom}"></td>
+
+        <td th:text="${student.prenom}"></td>
+
+        <td th:text="${student.email}"></td>
+
+        <td th:text="${student.telephone}"></td>
+
+        <td th:text="${student.average}"></td>
+
+        <td>
+            <span th:if="${student.classe != null}"
+                  th:text="${student.classe.nom}">
+            </span>
+
+            <span th:if="${student.classe == null}">
+                Aucune classe
+            </span>
+        </td>
+
+        <td>
+
+            <a th:href="@{/students/{id}/details(id=${student.id})}">
+                Détails
+            </a>
+
+            |
+
+            <a th:href="@{/students/edit/{id}(id=${student.id})}">
+                Modifier
+            </a>
+
+            |
+
+            <a th:href="@{/students/delete/{id}(id=${student.id})}"
+               onclick="return confirm('Voulez-vous supprimer cet étudiant ?');">
+                Supprimer
+            </a>
+
+        </td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+</body>
+
+</html>
