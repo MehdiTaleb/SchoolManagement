@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Détails de la classe</title>
+</head>
+
+<body>
+
+<h1>Détails de la classe</h1>
+
+<p>
+    <strong>ID :</strong>
+    <span th:text="${classe.id}"></span>
+</p>
+
+<p>
+    <strong>Nom :</strong>
+    <span th:text="${classe.nom}"></span>
+</p>
+
+<p>
+    <strong>Niveau :</strong>
+    <span th:text="${classe.niveau != null ? classe.niveau.label : ''}"></span>
+</p>
+
+<p>
+    <strong>Salle :</strong>
+    <span th:text="${classe.salle}"></span>
+</p>
+
+<p>
+    <strong>Nombre d'étudiants :</strong>
+    <span th:text="${classe.nombreEtudiants != null ? classe.nombreEtudiants : 0}"></span>
+</p>
+
+<hr>
+
+<h2>Étudiants de la classe</h2>
+
+<table border="1" cellpadding="8">
+
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Moyenne</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="student : ${classe.students}">
+
+        <td th:text="${student.id}"></td>
+        <td th:text="${student.nom}"></td>
+        <td th:text="${student.prenom}"></td>
+        <td th:text="${student.email}"></td>
+        <td th:text="${student.average}"></td>
+
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(classe.students)}">
+        <td colspan="5">
+            Aucun étudiant dans cette classe.
+        </td>
+    </tr>
+
+    </tbody>
+
+</table>
+
+<br>
+
+<a th:href="@{/classes}">
+    Retour aux classes
+</a>
+
+</body>
+
+</html>

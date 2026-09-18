@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des classes</title>
+</head>
+
+<body>
+
+<h1>Liste des classes</h1>
+
+<div th:if="${successMessage}"
+     th:text="${successMessage}">
+</div>
+
+<div th:if="${errorMessage}"
+     th:text="${errorMessage}">
+</div>
+
+<p>
+    <a th:href="@{/classes/add}">
+        Ajouter une classe
+    </a>
+</p>
+
+<table border="1" cellpadding="8">
+
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Niveau</th>
+        <th>Salle</th>
+        <th>Nombre d'étudiants</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="classe : ${classes}">
+
+        <td th:text="${classe.id}"></td>
+
+        <td th:text="${classe.nom}"></td>
+
+        <td th:text="${classe.niveau != null ? classe.niveau.label : ''}"></td>
+
+        <td th:text="${classe.salle}"></td>
+
+        <td th:text="${classe.nombreEtudiants != null ? classe.nombreEtudiants : 0}"></td>
+
+        <td>
+
+            <a th:href="@{/classes/{id}/details(id=${classe.id})}">
+                Détails
+            </a>
+
+            |
+
+            <a th:href="@{/classes/edit/{id}(id=${classe.id})}">
+                Modifier
+            </a>
+
+            |
+
+            <a th:href="@{/classes/delete/{id}(id=${classe.id})}"
+               onclick="return confirm('Voulez-vous vraiment supprimer cette classe ?');">
+                Supprimer
+            </a>
+
+        </td>
+
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(classes)}">
+        <td colspan="6">
+            Aucune classe trouvée.
+        </td>
+    </tr>
+
+    </tbody>
+
+</table>
+
+<br>
+
+<a th:href="@{/students}">
+    Gestion des étudiants
+</a>
+
+</body>
+
+</html>

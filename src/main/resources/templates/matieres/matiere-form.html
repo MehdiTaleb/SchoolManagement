@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${formTitle}">Matière</title>
+</head>
+
+<body>
+
+<h1 th:text="${formTitle}">Matière</h1>
+
+<div th:if="${errorMessage}"
+     th:text="${errorMessage}">
+</div>
+
+<form th:object="${matiere}"
+      th:action="${matiere.id == null ? '/matieres/add' : '/matieres/edit'}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}">
+
+    <label>Nom :</label>
+
+    <input type="text"
+           th:field="*{nom}"
+           required>
+
+    <br><br>
+
+    <label>Code :</label>
+
+    <input type="text"
+           th:field="*{code}">
+
+    <br><br>
+
+    <label>Coefficient :</label>
+
+    <input type="number"
+           min="1"
+           th:field="*{coefficient}">
+
+    <br><br>
+
+    <label>Volume horaire :</label>
+
+    <input type="number"
+           min="0"
+           th:field="*{volumeHoraire}">
+
+    <br><br>
+
+    <label>Professeur :</label>
+
+    <select th:field="*{professeur}">
+
+        <option value="">
+            -- Aucun professeur --
+        </option>
+
+        <option th:each="professeur : ${professeurs}"
+                th:value="${professeur.id}"
+                th:text="${professeur.nom + ' ' + professeur.prenom}">
+        </option>
+
+    </select>
+
+    <br><br>
+
+    <button type="submit">
+        Enregistrer
+    </button>
+
+    <a th:href="@{/matieres}">
+        Annuler
+    </a>
+
+</form>
+
+</body>
+
+</html>

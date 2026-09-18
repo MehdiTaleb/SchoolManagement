@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Matières</title>
+</head>
+
+<body>
+
+<h1>Liste des matières</h1>
+
+<a th:href="@{/matieres/add}">
+    Ajouter une matière
+</a>
+
+<br><br>
+
+<form th:action="@{/matieres/search}" method="get">
+
+    <input type="text"
+           name="keyword"
+           placeholder="Rechercher une matière">
+
+    <button type="submit">
+        Rechercher
+    </button>
+
+</form>
+
+<br>
+
+<table border="1" cellpadding="8">
+
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Code</th>
+        <th>Coefficient</th>
+        <th>Volume horaire</th>
+        <th>Professeur</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="matiere : ${matieres}">
+
+        <td th:text="${matiere.id}"></td>
+
+        <td th:text="${matiere.nom}"></td>
+
+        <td th:text="${matiere.code}"></td>
+
+        <td th:text="${matiere.coefficient}"></td>
+
+        <td th:text="${matiere.volumeHoraire}"></td>
+
+        <td th:text="${matiere.professeur != null ?
+                       matiere.professeur.nom + ' ' + matiere.professeur.prenom :
+                       'Non affecté'}">
+        </td>
+
+        <td>
+
+            <a th:href="@{/matieres/{id}/details(id=${matiere.id})}">
+                Détails
+            </a>
+
+            |
+
+            <a th:href="@{/matieres/edit/{id}(id=${matiere.id})}">
+                Modifier
+            </a>
+
+            |
+
+            <a th:href="@{/matieres/delete/{id}(id=${matiere.id})}"
+               onclick="return confirm('Supprimer cette matière ?');">
+                Supprimer
+            </a>
+
+        </td>
+
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(matieres)}">
+
+        <td colspan="7">
+            Aucune matière trouvée.
+        </td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+<br>
+
+<a th:href="@{/templates/students}">
+    Étudiants
+</a>
+
+|
+
+<a th:href="@{/templates/classes}">
+    Classes
+</a>
+
+|
+
+<a th:href="@{/professeurs}">
+    Professeurs
+</a>
+
+</body>
+
+</html>

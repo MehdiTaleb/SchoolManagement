@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Détails professeur</title>
+</head>
+
+<body>
+
+<h1>Détails du professeur</h1>
+
+<p>
+    <strong>ID :</strong>
+    <span th:text="${professeur.id}"></span>
+</p>
+
+<p>
+    <strong>Nom :</strong>
+    <span th:text="${professeur.nom}"></span>
+</p>
+
+<p>
+    <strong>Prénom :</strong>
+    <span th:text="${professeur.prenom}"></span>
+</p>
+
+<p>
+    <strong>Email :</strong>
+    <span th:text="${professeur.email}"></span>
+</p>
+
+<p>
+    <strong>Téléphone :</strong>
+    <span th:text="${professeur.telephone}"></span>
+</p>
+
+<p>
+    <strong>Spécialité :</strong>
+    <span th:text="${professeur.specialite}"></span>
+</p>
+
+<hr>
+
+<h2>Matières enseignées</h2>
+
+<table border="1" cellpadding="8">
+
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Matière</th>
+        <th>Code</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="matiere : ${professeur.matieres}">
+
+        <td th:text="${matiere.id}"></td>
+        <td th:text="${matiere.nom}"></td>
+        <td th:text="${matiere.code}"></td>
+
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(professeur.matieres)}">
+        <td colspan="3">
+            Aucune matière.
+        </td>
+    </tr>
+
+    </tbody>
+
+</table>
+
+<br>
+
+<a th:href="@{/professeurs}">
+    Retour
+</a>
+
+</body>
+
+</html>

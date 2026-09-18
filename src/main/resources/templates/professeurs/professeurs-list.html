@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Professeurs</title>
+</head>
+
+<body>
+
+<h1>Liste des professeurs</h1>
+
+<a th:href="@{/professeurs/add}">
+    Ajouter un professeur
+</a>
+
+<br><br>
+
+<form th:action="@{/professeurs/search}" method="get">
+
+    <input type="text"
+           name="keyword"
+           placeholder="Rechercher par nom">
+
+    <button type="submit">
+        Rechercher
+    </button>
+
+</form>
+
+<br>
+
+<table border="1" cellpadding="8">
+
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Spécialité</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="professeur : ${professeurs}">
+
+        <td th:text="${professeur.id}"></td>
+
+        <td th:text="${professeur.nom}"></td>
+
+        <td th:text="${professeur.prenom}"></td>
+
+        <td th:text="${professeur.email}"></td>
+
+        <td th:text="${professeur.telephone}"></td>
+
+        <td th:text="${professeur.specialite}"></td>
+
+        <td>
+
+            <a th:href="@{/professeurs/{id}/details(id=${professeur.id})}">
+                Détails
+            </a>
+
+            |
+
+            <a th:href="@{/professeurs/edit/{id}(id=${professeur.id})}">
+                Modifier
+            </a>
+
+            |
+
+            <a th:href="@{/professeurs/delete/{id}(id=${professeur.id})}"
+               onclick="return confirm('Supprimer ce professeur ?');">
+                Supprimer
+            </a>
+
+        </td>
+
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(professeurs)}">
+
+        <td colspan="7">
+            Aucun professeur trouvé.
+        </td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+<br>
+
+<a th:href="@{/students}">
+    Étudiants
+</a>
+
+|
+
+<a th:href="@{/classes}">
+    Classes
+</a>
+
+|
+
+<a th:href="@{/matieres}">
+    Matières
+</a>
+
+</body>
+
+</html>

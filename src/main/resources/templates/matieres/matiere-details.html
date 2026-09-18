@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Détails matière</title>
+</head>
+
+<body>
+
+<h1>Détails de la matière</h1>
+
+<p>
+    <strong>ID :</strong>
+    <span th:text="${matiere.id}"></span>
+</p>
+
+<p>
+    <strong>Nom :</strong>
+    <span th:text="${matiere.nom}"></span>
+</p>
+
+<p>
+    <strong>Code :</strong>
+    <span th:text="${matiere.code}"></span>
+</p>
+
+<p>
+    <strong>Coefficient :</strong>
+    <span th:text="${matiere.coefficient}"></span>
+</p>
+
+<p>
+    <strong>Volume horaire :</strong>
+    <span th:text="${matiere.volumeHoraire}"></span>
+</p>
+
+<p>
+    <strong>Professeur :</strong>
+
+    <span th:if="${matiere.professeur != null}"
+          th:text="${matiere.professeur.nom + ' ' + matiere.professeur.prenom}">
+    </span>
+
+    <span th:if="${matiere.professeur == null}">
+        Aucun professeur affecté
+    </span>
+
+</p>
+
+<br>
+
+<a th:href="@{/matieres}">
+    Retour aux matières
+</a>
+
+</body>
+
+</html>

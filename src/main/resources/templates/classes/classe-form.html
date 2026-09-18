@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${formTitle}">Classe</title>
+</head>
+<body>
+
+<h1 th:text="${formTitle}">Classe</h1>
+
+<div th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+<form th:object="${classe}"
+      th:action="${classe.id == null ? '/classes/add' : '/classes/edit'}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}">
+
+    <div>
+        <label for="nom">Nom :</label>
+        <input id="nom" type="text" th:field="*{nom}" required>
+    </div>
+
+    <div>
+        <label for="niveau">Niveau :</label>
+        <select id="niveau" th:field="*{niveau}" required>
+            <option value="">-- Choisir un niveau --</option>
+            <option th:each="n : ${niveaux}"
+                    th:value="${n}"
+                    th:text="${n.label}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label for="salle">Salle :</label>
+        <input id="salle" type="text" th:field="*{salle}">
+    </div>
+
+    <div>
+        <button type="submit">Enregistrer</button>
+        <a th:href="@{/classes}">Annuler</a>
+    </div>
+
+</form>
+
+</body>
+</html>

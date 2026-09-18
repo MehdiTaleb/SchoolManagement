@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${formTitle}">Professeur</title>
+</head>
+
+<body>
+
+<h1 th:text="${formTitle}">Professeur</h1>
+
+<div th:if="${errorMessage}"
+     th:text="${errorMessage}">
+</div>
+
+<form th:object="${professeur}"
+      th:action="${professeur.id == null ? '/professeurs/add' : '/professeurs/edit'}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}">
+
+    <label>Nom :</label>
+    <input type="text"
+           th:field="*{nom}"
+           required>
+
+    <br><br>
+
+    <label>Prénom :</label>
+    <input type="text"
+           th:field="*{prenom}"
+           required>
+
+    <br><br>
+
+    <label>Email :</label>
+    <input type="email"
+           th:field="*{email}">
+
+    <br><br>
+
+    <label>Téléphone :</label>
+    <input type="text"
+           th:field="*{telephone}">
+
+    <br><br>
+
+    <label>Spécialité :</label>
+    <input type="text"
+           th:field="*{specialite}">
+
+    <br><br>
+
+    <button type="submit">
+        Enregistrer
+    </button>
+
+    <a th:href="@{/professeurs}">
+        Annuler
+    </a>
+
+</form>
+
+</body>
+
+</html>

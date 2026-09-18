@@ -3,81 +3,60 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <title th:text="${formTitle}">
-        Étudiant
-    </title>
-
+    <title th:text="${formTitle}">Étudiant</title>
 </head>
 
 <body>
 
-<h1 th:text="${formTitle}">
-    Étudiant
-</h1>
+<h1 th:text="${formTitle}">Étudiant</h1>
 
-<div th:if="${errorMessage}"
-     th:text="${errorMessage}">
-</div>
+<div th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
 <form th:object="${student}"
-      th:action="${student.id == null}
-                 ? @{/students/add}
-                 : @{/students/edit}"
+      th:action="${student.id == null} ? @{/students/add} : @{/students/edit}"
       method="post">
 
-    <input type="hidden"
-           th:field="*{id}">
+    <input type="hidden" th:field="*{id}">
 
     <label>Nom :</label>
-
-    <input type="text"
-           th:field="*{nom}"
-           required>
+    <input type="text" th:field="*{nom}" required>
 
     <br><br>
 
     <label>Prénom :</label>
-
-    <input type="text"
-           th:field="*{prenom}"
-           required>
+    <input type="text" th:field="*{prenom}" required>
 
     <br><br>
 
     <label>Email :</label>
-
-    <input type="email"
-           th:field="*{email}">
+    <input type="email" th:field="*{email}">
 
     <br><br>
 
     <label>Téléphone :</label>
-
-    <input type="text"
-           th:field="*{telephone}">
+    <input type="text" th:field="*{telephone}">
 
     <br><br>
 
     <label>Moyenne :</label>
-
-    <input type="number"
-           step="0.01"
-           min="0"
-           max="20"
-           th:field="*{average}">
+    <input type="number" step="0.01" min="0" max="20" th:field="*{average}">
 
     <br><br>
 
-    <button type="submit">
-        Enregistrer
-    </button>
+    <label>Classe :</label>
+    <select th:field="*{classe}">
+        <option value="">-- Aucune classe --</option>
+        <option th:each="c : ${classes}"
+                th:value="${c.id}"
+                th:text="${c.nom}">
+        </option>
+    </select>
 
-    <a th:href="@{/students}">
-        Annuler
-    </a>
+    <br><br>
+
+    <button type="submit">Enregistrer</button>
+    <a th:href="@{/students}">Annuler</a>
 
 </form>
 
