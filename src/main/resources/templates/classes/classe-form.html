@@ -1,48 +1,146 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${formTitle}">Classe</title>
+    <title>Formulaire classe</title>
 </head>
+
 <body>
 
-<h1 th:text="${formTitle}">Classe</h1>
+<div layout:fragment="content">
 
-<div th:if="${errorMessage}" th:text="${errorMessage}"></div>
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1 th:text="${formTitle} ?: 'Ajouter une classe'">Ajouter une classe</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/classes}" class="text-decoration-none">Classes</a>
+                        </li>
+                        <li class="breadcrumb-item active">Formulaire</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
 
-<form th:object="${classe}"
-      th:action="${classe.id == null ? '/classes/add' : '/classes/edit'}"
-      method="post">
-
-    <input type="hidden" th:field="*{id}">
-
-    <div>
-        <label for="nom">Nom :</label>
-        <input id="nom" type="text" th:field="*{nom}" required>
+        <a th:href="@{/classes}" class="btn btn-outline-secondary"
+           style="border-radius: 8px; padding: 8px 16px;">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
     </div>
 
-    <div>
-        <label for="niveau">Niveau :</label>
-        <select id="niveau" th:field="*{niveau}" required>
-            <option value="">-- Choisir un niveau --</option>
-            <option th:each="n : ${niveaux}"
-                    th:value="${n}"
-                    th:text="${n.label}">
-            </option>
-        </select>
+    <!-- Erreur -->
+    <div th:if="${errorMessage}" class="alert-custom alert-danger-custom">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${errorMessage}"></span>
     </div>
 
-    <div>
-        <label for="salle">Salle :</label>
-        <input id="salle" type="text" th:field="*{salle}">
+    <!-- Form card -->
+    <div class="content-card" style="max-width: 720px;">
+
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-building-add me-2 text-primary"></i>
+                Informations de la classe
+            </h5>
+        </div>
+
+        <div class="p-4">
+
+            <form th:action="@{${classe.id != null} ? '/classes/edit' : '/classes/add'}"
+                  th:object="${classe}"
+                  method="post">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nom <span class="text-danger">*</span></label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{nom}"
+                               placeholder="3ème A"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Niveau</label>
+                        <select class="form-select" th:field="*{niveau}">
+                            <option value="">-- Sélectionner --</option>
+                            <option th:each="n : ${T(net.mehdi.schoolmanagement.model.Niveau).values()}"
+                                    th:value="${n}"
+                                    th:text="${n.label}">
+                                Niveau
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Salle</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{salle}"
+                               placeholder="A101">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nombre d'étudiants</label>
+                        <input type="number"
+                               class="form-control"
+                               th:field="*{nombreEtudiants}"
+                               placeholder="30"
+                               min="0">
+                    </div>
+
+                    <!-- Professeur associé -->
+                    <div class="col-md-12">
+                        <label class="form-label fw-semibold">Professeur principal</label>
+                        <select class="form-select" th:field="*{professeur}">
+                            <option value="">-- Aucun professeur --</option>
+                            <option th:each="p : ${professeurs}"
+                                    th:value="${p.id}"
+                                    th:text="${p.nom + ' ' + p.prenom + ' (' + p.specialite + ')'}">
+                                Professeur
+                            </option>
+                        </select>
+                        <small class="text-muted">
+                            Un professeur ne peut être affecté qu'à une seule classe.
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="bi bi-check-lg"></i>
+                        <span th:text="${classe.id != null} ? 'Modifier' : 'Ajouter'">Ajouter</span>
+                    </button>
+
+                    <a th:href="@{/classes}" class="btn btn-outline-secondary"
+                       style="border-radius: 8px;">
+                        Annuler
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
     </div>
 
-    <div>
-        <button type="submit">Enregistrer</button>
-        <a th:href="@{/classes}">Annuler</a>
-    </div>
-
-</form>
+</div>
 
 </body>
 </html>

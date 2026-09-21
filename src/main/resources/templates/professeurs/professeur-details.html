@@ -1,85 +1,126 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Détails professeur</title>
+    <title>Détails du professeur</title>
 </head>
 
 <body>
 
-<h1>Détails du professeur</h1>
+<div layout:fragment="content">
 
-<p>
-    <strong>ID :</strong>
-    <span th:text="${professeur.id}"></span>
-</p>
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1>Détails du professeur</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/professeurs}" class="text-decoration-none">Professeurs</a>
+                        </li>
+                        <li class="breadcrumb-item active">Détails</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
 
-<p>
-    <strong>Nom :</strong>
-    <span th:text="${professeur.nom}"></span>
-</p>
+        <div class="d-flex gap-2">
+            <a th:href="@{/professeurs}" class="btn btn-outline-secondary"
+               style="border-radius: 8px; padding: 8px 16px;">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+            <a th:href="@{/professeurs/edit/{id}(id=${professeur.id})}"
+               class="btn btn-primary-custom">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+        </div>
+    </div>
 
-<p>
-    <strong>Prénom :</strong>
-    <span th:text="${professeur.prenom}"></span>
-</p>
+    <!-- Profile card -->
+    <div class="content-card" style="max-width: 800px;">
 
-<p>
-    <strong>Email :</strong>
-    <span th:text="${professeur.email}"></span>
-</p>
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-person-badge me-2 text-primary"></i>
+                Informations
+            </h5>
+        </div>
 
-<p>
-    <strong>Téléphone :</strong>
-    <span th:text="${professeur.telephone}"></span>
-</p>
+        <div class="p-4">
 
-<p>
-    <strong>Spécialité :</strong>
-    <span th:text="${professeur.specialite}"></span>
-</p>
+            <!-- En-tête profil -->
+            <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
+                <div class="avatar"
+                     style="width: 72px; height: 72px; font-size: 1.5rem;"
+                     th:text="${#strings.substring(professeur.nom, 0, 1) + #strings.substring(professeur.prenom, 0, 1)}">
+                    AB
+                </div>
+                <div class="ms-3">
+                    <h3 class="mb-1"
+                        th:text="${professeur.nom + ' ' + professeur.prenom}">
+                        Nom Prénom
+                    </h3>
+                    <span class="badge-soft badge-soft-primary"
+                          th:text="${professeur.specialite}">
+                        Spécialité
+                    </span>
+                </div>
+            </div>
 
-<hr>
+            <!-- Champs -->
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">ID</label>
+                    <p class="mb-0 fw-semibold" th:text="'#' + ${professeur.id}">#0</p>
+                </div>
 
-<h2>Matières enseignées</h2>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Email</label>
+                    <p class="mb-0 fw-semibold">
+                        <i class="bi bi-envelope me-1 text-muted"></i>
+                        <span th:text="${professeur.email}">email</span>
+                    </p>
+                </div>
 
-<table border="1" cellpadding="8">
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Téléphone</label>
+                    <p class="mb-0 fw-semibold">
+                        <i class="bi bi-telephone me-1 text-muted"></i>
+                        <span th:text="${professeur.telephone}">téléphone</span>
+                    </p>
+                </div>
 
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Matière</th>
-        <th>Code</th>
-    </tr>
-    </thead>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Classe associée</label>
+                    <p class="mb-0">
+                        <span th:if="${professeur.classe != null}"
+                              class="badge-soft badge-soft-success"
+                              th:text="${professeur.classe.nom}">
+                            Classe
+                        </span>
+                        <span th:if="${professeur.classe == null}"
+                              class="badge-soft badge-soft-gray">
+                            Aucune classe
+                        </span>
+                    </p>
+                </div>
+            </div>
 
-    <tbody>
+        </div>
+    </div>
 
-    <tr th:each="matiere : ${professeur.matieres}">
-
-        <td th:text="${matiere.id}"></td>
-        <td th:text="${matiere.nom}"></td>
-        <td th:text="${matiere.code}"></td>
-
-    </tr>
-
-    <tr th:if="${#lists.isEmpty(professeur.matieres)}">
-        <td colspan="3">
-            Aucune matière.
-        </td>
-    </tr>
-
-    </tbody>
-
-</table>
-
-<br>
-
-<a th:href="@{/professeurs}">
-    Retour
-</a>
+</div>
 
 </body>
-
 </html>

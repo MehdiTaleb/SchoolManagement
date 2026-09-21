@@ -1,121 +1,223 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Matières</title>
+    <title>Liste des matières</title>
 </head>
 
 <body>
 
-<h1>Liste des matières</h1>
+<div layout:fragment="content">
 
-<a th:href="@{/matieres/add}">
-    Ajouter une matière
-</a>
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1>Liste des matières</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item active">Matières</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
 
-<br><br>
+        <a th:href="@{/matieres/add}" class="btn btn-primary-custom">
+            <i class="bi bi-plus-lg"></i> Ajouter une matière
+        </a>
+    </div>
 
-<form th:action="@{/matieres/search}" method="get">
+    <!-- Messages flash -->
+    <div th:if="${successMessage}" class="alert-custom alert-success-custom">
+        <i class="bi bi-check-circle-fill"></i>
+        <span th:text="${successMessage}"></span>
+    </div>
 
-    <input type="text"
-           name="keyword"
-           placeholder="Rechercher une matière">
+    <div th:if="${errorMessage}" class="alert-custom alert-danger-custom">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${errorMessage}"></span>
+    </div>
 
-    <button type="submit">
-        Rechercher
-    </button>
+    <!-- Stat cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon bg-primary-soft">
+                    <i class="bi bi-book-fill"></i>
+                </div>
+                <div>
+                    <h3 th:text="${matieres != null ? matieres.size() : 0}">0</h3>
+                    <p>Total matières</p>
+                </div>
+            </div>
+        </div>
 
-</form>
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon bg-success-soft">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+                <div>
+                    <h3>Assignées</h3>
+                    <p>Avec professeur</p>
+                </div>
+            </div>
+        </div>
 
-<br>
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon bg-warning-soft">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                </div>
+                <div>
+                    <h3>Non affectées</h3>
+                    <p>Sans professeur</p>
+                </div>
+            </div>
+        </div>
 
-<table border="1" cellpadding="8">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon bg-info-soft">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div>
+                    <h3>Volume</h3>
+                    <p>Total horaire</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Code</th>
-        <th>Coefficient</th>
-        <th>Volume horaire</th>
-        <th>Professeur</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+    <!-- Table card -->
+    <div class="content-card">
 
-    <tbody>
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-table me-2 text-primary"></i>
+                Liste complète
+            </h5>
 
-    <tr th:each="matiere : ${matieres}">
+            <form th:action="@{/matieres/search}" method="get" class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text"
+                       name="keyword"
+                       placeholder="Rechercher une matière..."
+                       th:value="${keyword}">
+            </form>
+        </div>
 
-        <td th:text="${matiere.id}"></td>
+        <div class="table-responsive">
+            <table class="table table-custom align-middle">
+                <thead>
+                <tr>
+                    <th>Matière</th>
+                    <th>Code</th>
+                    <th>Coefficient</th>
+                    <th>Volume horaire</th>
+                    <th>Professeur</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
 
-        <td th:text="${matiere.nom}"></td>
+                <tbody>
+                <tr th:each="matiere : ${matieres}">
 
-        <td th:text="${matiere.code}"></td>
+                    <td>
+                        <div class="student-name">
+                            <div class="avatar"
+                                 style="background: linear-gradient(135deg, #f59e0b, #d97706);"
+                                 th:text="${#strings.substring(matiere.nom, 0, 1)}">
+                                M
+                            </div>
+                            <div>
+                                <div class="fw-semibold" th:text="${matiere.nom}">Nom</div>
+                                <small class="text-muted" th:text="'#' + ${matiere.id}">#0</small>
+                            </div>
+                        </div>
+                    </td>
 
-        <td th:text="${matiere.coefficient}"></td>
+                    <td>
+                        <span class="badge-soft badge-soft-primary"
+                              th:text="${matiere.code}">
+                            CODE
+                        </span>
+                    </td>
 
-        <td th:text="${matiere.volumeHoraire}"></td>
+                    <td>
+                        <i class="bi bi-award me-1 text-muted"></i>
+                        <span th:text="${matiere.coefficient}">1</span>
+                    </td>
 
-        <td th:text="${matiere.professeur != null ?
-                       matiere.professeur.nom + ' ' + matiere.professeur.prenom :
-                       'Non affecté'}">
-        </td>
+                    <td>
+                        <i class="bi bi-clock me-1 text-muted"></i>
+                        <span th:text="${matiere.volumeHoraire != null ? matiere.volumeHoraire + ' h' : '-'}">
+                            0 h
+                        </span>
+                    </td>
 
-        <td>
+                    <td>
+                        <span th:if="${matiere.professeur != null}"
+                              th:text="${matiere.professeur.nom + ' ' + matiere.professeur.prenom}">
+                            Nom Prénom
+                        </span>
 
-            <a th:href="@{/matieres/{id}/details(id=${matiere.id})}">
-                Détails
-            </a>
+                        <span th:if="${matiere.professeur == null}"
+                              class="badge-soft badge-soft-gray">
+                            Non affecté
+                        </span>
+                    </td>
 
-            |
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/matieres/{id}/details(id=${matiere.id})}"
+                               class="action-btn view"
+                               title="Détails">
+                                <i class="bi bi-eye"></i>
+                            </a>
 
-            <a th:href="@{/matieres/edit/{id}(id=${matiere.id})}">
-                Modifier
-            </a>
+                            <a th:href="@{/matieres/edit/{id}(id=${matiere.id})}"
+                               class="action-btn edit"
+                               title="Modifier">
+                                <i class="bi bi-pencil"></i>
+                            </a>
 
-            |
+                            <a th:href="@{/matieres/delete/{id}(id=${matiere.id})}"
+                               class="action-btn delete"
+                               title="Supprimer"
+                               onclick="return confirm('Supprimer cette matière ?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
 
-            <a th:href="@{/matieres/delete/{id}(id=${matiere.id})}"
-               onclick="return confirm('Supprimer cette matière ?');">
-                Supprimer
-            </a>
+                </tr>
 
-        </td>
+                <tr th:if="${matieres == null or matieres.empty}">
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <i class="bi bi-book"></i>
+                            <h5 class="mb-1">Aucune matière trouvée</h5>
+                            <p class="mb-0">Commencez par ajouter une nouvelle matière.</p>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    </tr>
-
-    <tr th:if="${#lists.isEmpty(matieres)}">
-
-        <td colspan="7">
-            Aucune matière trouvée.
-        </td>
-
-    </tr>
-
-    </tbody>
-
-</table>
-
-<br>
-
-<a th:href="@{/templates/students}">
-    Étudiants
-</a>
-
-|
-
-<a th:href="@{/templates/classes}">
-    Classes
-</a>
-
-|
-
-<a th:href="@{/professeurs}">
-    Professeurs
-</a>
+</div>
 
 </body>
-
 </html>

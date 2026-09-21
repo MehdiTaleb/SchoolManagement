@@ -1,83 +1,146 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${formTitle}">Matière</title>
+    <title>Formulaire matière</title>
 </head>
 
 <body>
 
-<h1 th:text="${formTitle}">Matière</h1>
+<div layout:fragment="content">
 
-<div th:if="${errorMessage}"
-     th:text="${errorMessage}">
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1 th:text="${formTitle} ?: 'Ajouter une matière'">Ajouter une matière</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/matieres}" class="text-decoration-none">Matières</a>
+                        </li>
+                        <li class="breadcrumb-item active">Formulaire</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <a th:href="@{/matieres}" class="btn btn-outline-secondary"
+           style="border-radius: 8px; padding: 8px 16px;">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
+
+    <!-- Erreur -->
+    <div th:if="${errorMessage}" class="alert-custom alert-danger-custom">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Form card -->
+    <div class="content-card" style="max-width: 720px;">
+
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-book-half me-2 text-primary"></i>
+                Informations de la matière
+            </h5>
+        </div>
+
+        <div class="p-4">
+
+            <form th:action="@{${matiere.id != null} ? '/matieres/edit' : '/matieres/add'}"
+                  th:object="${matiere}"
+                  method="post">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="row g-3">
+
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold">
+                            Nom <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{nom}"
+                               placeholder="Mathématiques"
+                               required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Code</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{code}"
+                               placeholder="MATH101">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Coefficient</label>
+                        <input type="number"
+                               class="form-control"
+                               th:field="*{coefficient}"
+                               placeholder="2"
+                               min="1"
+                               max="10">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Volume horaire (h)</label>
+                        <input type="number"
+                               class="form-control"
+                               th:field="*{volumeHoraire}"
+                               placeholder="40"
+                               min="0">
+                    </div>
+
+                    <!-- Professeur associé -->
+                    <div class="col-md-12">
+                        <label class="form-label fw-semibold">Professeur</label>
+                        <select class="form-select" th:field="*{professeur}">
+                            <option value="">-- Aucun professeur --</option>
+                            <option th:each="p : ${professeurs}"
+                                    th:value="${p.id}"
+                                    th:text="${p.nom + ' ' + p.prenom + ' (' + p.specialite + ')'}">
+                                Professeur
+                            </option>
+                        </select>
+                        <small class="text-muted">
+                            Une matière peut être enseignée par un seul professeur.
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="bi bi-check-lg"></i>
+                        <span th:text="${matiere.id != null} ? 'Modifier' : 'Ajouter'">Ajouter</span>
+                    </button>
+
+                    <a th:href="@{/matieres}" class="btn btn-outline-secondary"
+                       style="border-radius: 8px;">
+                        Annuler
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
 </div>
 
-<form th:object="${matiere}"
-      th:action="${matiere.id == null ? '/matieres/add' : '/matieres/edit'}"
-      method="post">
-
-    <input type="hidden" th:field="*{id}">
-
-    <label>Nom :</label>
-
-    <input type="text"
-           th:field="*{nom}"
-           required>
-
-    <br><br>
-
-    <label>Code :</label>
-
-    <input type="text"
-           th:field="*{code}">
-
-    <br><br>
-
-    <label>Coefficient :</label>
-
-    <input type="number"
-           min="1"
-           th:field="*{coefficient}">
-
-    <br><br>
-
-    <label>Volume horaire :</label>
-
-    <input type="number"
-           min="0"
-           th:field="*{volumeHoraire}">
-
-    <br><br>
-
-    <label>Professeur :</label>
-
-    <select th:field="*{professeur}">
-
-        <option value="">
-            -- Aucun professeur --
-        </option>
-
-        <option th:each="professeur : ${professeurs}"
-                th:value="${professeur.id}"
-                th:text="${professeur.nom + ' ' + professeur.prenom}">
-        </option>
-
-    </select>
-
-    <br><br>
-
-    <button type="submit">
-        Enregistrer
-    </button>
-
-    <a th:href="@{/matieres}">
-        Annuler
-    </a>
-
-</form>
-
 </body>
-
 </html>

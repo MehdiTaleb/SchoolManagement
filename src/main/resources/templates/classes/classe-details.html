@@ -1,84 +1,136 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 
 <head>
-    <meta charset="UTF-8">
     <title>Détails de la classe</title>
 </head>
 
 <body>
 
-<h1>Détails de la classe</h1>
+<div layout:fragment="content">
 
-<p>
-    <strong>ID :</strong>
-    <span th:text="${classe.id}"></span>
-</p>
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1>Détails de la classe</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/classes}" class="text-decoration-none">Classes</a>
+                        </li>
+                        <li class="breadcrumb-item active">Détails</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
 
-<p>
-    <strong>Nom :</strong>
-    <span th:text="${classe.nom}"></span>
-</p>
+        <div class="d-flex gap-2">
+            <a th:href="@{/classes}" class="btn btn-outline-secondary"
+               style="border-radius: 8px; padding: 8px 16px;">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+            <a th:href="@{/classes/edit/{id}(id=${classe.id})}"
+               class="btn btn-primary-custom">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+        </div>
+    </div>
 
-<p>
-    <strong>Niveau :</strong>
-    <span th:text="${classe.niveau != null ? classe.niveau.label : ''}"></span>
-</p>
+    <div class="content-card" style="max-width: 800px;">
 
-<p>
-    <strong>Salle :</strong>
-    <span th:text="${classe.salle}"></span>
-</p>
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-building me-2 text-primary"></i>
+                Informations
+            </h5>
+        </div>
 
-<p>
-    <strong>Nombre d'étudiants :</strong>
-    <span th:text="${classe.nombreEtudiants != null ? classe.nombreEtudiants : 0}"></span>
-</p>
+        <div class="p-4">
 
-<hr>
+            <!-- En-tête -->
+            <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
+                <div class="avatar"
+                     style="width: 72px; height: 72px; font-size: 1.5rem;
+                            background: linear-gradient(135deg, #10b981, #059669);"
+                     th:text="${#strings.substring(classe.nom, 0, 1)}">
+                    A
+                </div>
+                <div class="ms-3">
+                    <h3 class="mb-1" th:text="${classe.nom}">Nom</h3>
+                    <span th:if="${classe.niveau != null}"
+                          class="badge-soft badge-soft-primary"
+                          th:text="${classe.niveau.label}">
+                        Niveau
+                    </span>
+                </div>
+            </div>
 
-<h2>Étudiants de la classe</h2>
+            <!-- Champs -->
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">ID</label>
+                    <p class="mb-0 fw-semibold" th:text="'#' + ${classe.id}">#0</p>
+                </div>
 
-<table border="1" cellpadding="8">
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Salle</label>
+                    <p class="mb-0 fw-semibold">
+                        <i class="bi bi-door-open me-1 text-muted"></i>
+                        <span th:text="${classe.salle}">A101</span>
+                    </p>
+                </div>
 
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Email</th>
-        <th>Moyenne</th>
-    </tr>
-    </thead>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Nombre d'étudiants</label>
+                    <p class="mb-0">
+                        <span class="badge-soft badge-soft-success"
+                              th:text="${classe.nombreEtudiants != null ? classe.nombreEtudiants : 0} + ' étudiants'">
+                            0
+                        </span>
+                    </p>
+                </div>
 
-    <tbody>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Professeur</label>
+                    <p class="mb-0">
+                        <span th:if="${classe.professeur != null}"
+                              class="fw-semibold"
+                              th:text="${classe.professeur.nom + ' ' + classe.professeur.prenom}">
+                            Nom
+                        </span>
+                        <span th:if="${classe.professeur == null}"
+                              class="badge-soft badge-soft-gray">
+                            Non assigné
+                        </span>
+                    </p>
+                </div>
 
-    <tr th:each="student : ${classe.students}">
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Créée le</label>
+                    <p class="mb-0" th:text="${classe.createdAt}">date</p>
+                </div>
 
-        <td th:text="${student.id}"></td>
-        <td th:text="${student.nom}"></td>
-        <td th:text="${student.prenom}"></td>
-        <td th:text="${student.email}"></td>
-        <td th:text="${student.average}"></td>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Modifiée le</label>
+                    <p class="mb-0" th:text="${classe.updatedAt}">date</p>
+                </div>
+            </div>
 
-    </tr>
+        </div>
+    </div>
 
-    <tr th:if="${#lists.isEmpty(classe.students)}">
-        <td colspan="5">
-            Aucun étudiant dans cette classe.
-        </td>
-    </tr>
-
-    </tbody>
-
-</table>
-
-<br>
-
-<a th:href="@{/classes}">
-    Retour aux classes
-</a>
+</div>
 
 </body>
-
 </html>

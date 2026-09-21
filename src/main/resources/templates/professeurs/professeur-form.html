@@ -1,67 +1,151 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${formTitle}">Professeur</title>
+    <title>Formulaire professeur</title>
 </head>
 
 <body>
 
-<h1 th:text="${formTitle}">Professeur</h1>
+<div layout:fragment="content">
 
-<div th:if="${errorMessage}"
-     th:text="${errorMessage}">
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1 th:text="${formTitle} ?: 'Ajouter un professeur'">Ajouter un professeur</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/professeurs}" class="text-decoration-none">Professeurs</a>
+                        </li>
+                        <li class="breadcrumb-item active">Formulaire</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <a th:href="@{/professeurs}" class="btn btn-outline-secondary"
+           style="border-radius: 8px; padding: 8px 16px;">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
+
+    <!-- Messages d'erreur -->
+    <div th:if="${errorMessage}" class="alert-custom alert-danger-custom">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Form card -->
+    <div class="content-card" style="max-width: 720px;">
+
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-person-plus-fill me-2 text-primary"></i>
+                Informations du professeur
+            </h5>
+        </div>
+
+        <div class="p-4">
+
+            <form th:action="@{${professeur.id != null} ? '/professeurs/edit' : '/professeurs/add'}"
+                  th:object="${professeur}"
+                  method="post">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nom <span class="text-danger">*</span></label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{nom}"
+                               placeholder="El Amrani"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Prénom <span class="text-danger">*</span></label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{prenom}"
+                               placeholder="Youssef"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                        <input type="email"
+                               class="form-control"
+                               th:field="*{email}"
+                               placeholder="prof@school.com"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Téléphone</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{telephone}"
+                               placeholder="06 00 00 00 00">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Spécialité</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{specialite}"
+                               placeholder="Mathématiques">
+                    </div>
+
+                    <!-- Classe associée -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Classe associée</label>
+                        <select class="form-select" th:field="*{classe}">
+                            <option value="">-- Aucune classe --</option>
+                            <option th:each="c : ${classes}"
+                                    th:value="${c.id}"
+                                    th:text="${c.nom}">
+                                Classe
+                            </option>
+                        </select>
+                        <small class="text-muted">
+                            Un professeur ne peut être affecté qu'à une seule classe.
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="bi bi-check-lg"></i>
+                        <span th:text="${professeur.id != null} ? 'Modifier' : 'Ajouter'">Ajouter</span>
+                    </button>
+
+                    <a th:href="@{/professeurs}" class="btn btn-outline-secondary"
+                       style="border-radius: 8px;">
+                        Annuler
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
 </div>
 
-<form th:object="${professeur}"
-      th:action="${professeur.id == null ? '/professeurs/add' : '/professeurs/edit'}"
-      method="post">
-
-    <input type="hidden" th:field="*{id}">
-
-    <label>Nom :</label>
-    <input type="text"
-           th:field="*{nom}"
-           required>
-
-    <br><br>
-
-    <label>Prénom :</label>
-    <input type="text"
-           th:field="*{prenom}"
-           required>
-
-    <br><br>
-
-    <label>Email :</label>
-    <input type="email"
-           th:field="*{email}">
-
-    <br><br>
-
-    <label>Téléphone :</label>
-    <input type="text"
-           th:field="*{telephone}">
-
-    <br><br>
-
-    <label>Spécialité :</label>
-    <input type="text"
-           th:field="*{specialite}">
-
-    <br><br>
-
-    <button type="submit">
-        Enregistrer
-    </button>
-
-    <a th:href="@{/professeurs}">
-        Annuler
-    </a>
-
-</form>
-
 </body>
-
 </html>

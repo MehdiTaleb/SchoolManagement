@@ -5,6 +5,7 @@ import net.mehdi.schoolmanagement.model.Classe;
 import net.mehdi.schoolmanagement.model.Niveau;
 import net.mehdi.schoolmanagement.service.ClasseService;
 import jakarta.validation.Valid;
+import net.mehdi.schoolmanagement.service.ProfesseurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,12 +22,15 @@ public class ClasseController {
 
     @Autowired
     private ClasseService classeService;
+    @Autowired
+    private ProfesseurService professeurService;
 
     // Lister toutes les classes
     @GetMapping
     public String listClasses(Model model) {
         List<Classe> classes = classeService.getAllClasses();
         model.addAttribute("classes", classes);
+        model.addAttribute("professeurs", professeurService.getAllProfesseurs());
         model.addAttribute("niveaux", Niveau.values());
         return "classes/classes-list";
     }
@@ -36,6 +40,7 @@ public class ClasseController {
     public String showAddForm(Model model) {
         model.addAttribute("classe", new Classe());
         model.addAttribute("niveaux", Niveau.values());
+        model.addAttribute("professeurs", professeurService.getAllProfesseurs());
         model.addAttribute("formTitle", "Ajouter une Classe");
         return "classes/classe-form";
     }
@@ -74,6 +79,7 @@ public class ClasseController {
         if (classe.isPresent()) {
             model.addAttribute("classe", classe.get());
             model.addAttribute("niveaux", Niveau.values());
+            model.addAttribute("professeurs", professeurService.getAllProfesseurs());
             model.addAttribute("formTitle", "Éditer Classe");
             return "classes/classe-form";
         }
@@ -122,6 +128,7 @@ public class ClasseController {
         Optional<Classe> classe = classeService.getClasseById(id);
         if (classe.isPresent()) {
             model.addAttribute("classe", classe.get());
+            model.addAttribute("professeurs", professeurService.getAllProfesseurs());
             model.addAttribute("students", classeService.getStudentsByClasse(id));
             model.addAttribute("moyenne", classeService.getMoyenneClasse(id));
             model.addAttribute("effectif", classeService.countStudentsByClasse(id));

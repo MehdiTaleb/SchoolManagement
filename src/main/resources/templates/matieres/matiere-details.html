@@ -1,59 +1,125 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Détails matière</title>
+    <title>Détails de la matière</title>
 </head>
 
 <body>
 
-<h1>Détails de la matière</h1>
+<div layout:fragment="content">
 
-<p>
-    <strong>ID :</strong>
-    <span th:text="${matiere.id}"></span>
-</p>
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1>Détails de la matière</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/matieres}" class="text-decoration-none">Matières</a>
+                        </li>
+                        <li class="breadcrumb-item active">Détails</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
 
-<p>
-    <strong>Nom :</strong>
-    <span th:text="${matiere.nom}"></span>
-</p>
+        <div class="d-flex gap-2">
+            <a th:href="@{/matieres}" class="btn btn-outline-secondary"
+               style="border-radius: 8px; padding: 8px 16px;">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+            <a th:href="@{/matieres/edit/{id}(id=${matiere.id})}"
+               class="btn btn-primary-custom">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+        </div>
+    </div>
 
-<p>
-    <strong>Code :</strong>
-    <span th:text="${matiere.code}"></span>
-</p>
+    <div class="content-card" style="max-width: 800px;">
 
-<p>
-    <strong>Coefficient :</strong>
-    <span th:text="${matiere.coefficient}"></span>
-</p>
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-book me-2 text-primary"></i>
+                Informations
+            </h5>
+        </div>
 
-<p>
-    <strong>Volume horaire :</strong>
-    <span th:text="${matiere.volumeHoraire}"></span>
-</p>
+        <div class="p-4">
 
-<p>
-    <strong>Professeur :</strong>
+            <!-- En-tête -->
+            <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
+                <div class="avatar"
+                     style="width: 72px; height: 72px; font-size: 1.5rem;
+                            background: linear-gradient(135deg, #f59e0b, #d97706);"
+                     th:text="${#strings.substring(matiere.nom, 0, 1)}">
+                    M
+                </div>
+                <div class="ms-3">
+                    <h3 class="mb-1" th:text="${matiere.nom}">Nom</h3>
+                    <span class="badge-soft badge-soft-primary"
+                          th:text="${matiere.code}">
+                        CODE
+                    </span>
+                </div>
+            </div>
 
-    <span th:if="${matiere.professeur != null}"
-          th:text="${matiere.professeur.nom + ' ' + matiere.professeur.prenom}">
-    </span>
+            <!-- Champs -->
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">ID</label>
+                    <p class="mb-0 fw-semibold" th:text="'#' + ${matiere.id}">#0</p>
+                </div>
 
-    <span th:if="${matiere.professeur == null}">
-        Aucun professeur affecté
-    </span>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Coefficient</label>
+                    <p class="mb-0 fw-semibold">
+                        <i class="bi bi-award me-1 text-muted"></i>
+                        <span th:text="${matiere.coefficient}">1</span>
+                    </p>
+                </div>
 
-</p>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Volume horaire</label>
+                    <p class="mb-0 fw-semibold">
+                        <i class="bi bi-clock me-1 text-muted"></i>
+                        <span th:text="${matiere.volumeHoraire != null ? matiere.volumeHoraire + ' h' : '-'}">
+                            0 h
+                        </span>
+                    </p>
+                </div>
 
-<br>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Professeur</label>
+                    <p class="mb-0">
+                        <span th:if="${matiere.professeur != null}"
+                              class="fw-semibold"
+                              th:text="${matiere.professeur.nom + ' ' + matiere.professeur.prenom}">
+                            Nom
+                        </span>
+                        <span th:if="${matiere.professeur == null}"
+                              class="badge-soft badge-soft-gray">
+                            Non affecté
+                        </span>
+                    </p>
+                </div>
+            </div>
 
-<a th:href="@{/matieres}">
-    Retour aux matières
-</a>
+        </div>
+    </div>
+
+</div>
 
 </body>
-
 </html>
