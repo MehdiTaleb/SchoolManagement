@@ -33,6 +33,7 @@ public class Professeur {
 
     private String specialite;
 
+
     @OneToMany(mappedBy = "professeur")
     @ToString.Exclude
     private List<Matiere> matieres = new ArrayList<>();
@@ -40,6 +41,11 @@ public class Professeur {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    // ✅ Côté inverse : mappedBy référence le CHAMP dans Classe
+    @OneToOne(mappedBy = "professeur", fetch = FetchType.LAZY)
+    @ToString.Exclude   // évite la boucle infinie dans toString()
+    private Classe classe;
 
     public Professeur(String nom, String prenom, String email) {
         this.nom = nom;

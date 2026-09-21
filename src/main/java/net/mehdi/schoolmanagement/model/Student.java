@@ -26,6 +26,7 @@ public class Student {
 
     private Double average;
 
+
     @ManyToOne
     @JoinColumn(name = "classe_id")
     @ToString.Exclude

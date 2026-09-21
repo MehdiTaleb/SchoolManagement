@@ -29,6 +29,12 @@ public class Classe {
     private Integer nombreEtudiants;
     private String salle;
 
+    // ✅ OneToOne propriétaire : la FK 'professeur_id' sera dans la table 'classes'
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "professeur_id", referencedColumnName = "id")
+    private Professeur professeur;
+
+
     @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
     private List<Student> students = new ArrayList<>();
 
