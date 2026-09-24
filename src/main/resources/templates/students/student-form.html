@@ -1,65 +1,161 @@
 <!DOCTYPE html>
 <html lang="fr"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 
 <head>
-    <meta charset="UTF-8">
     <title th:text="${formTitle}">Étudiant</title>
 </head>
 
 <body>
 
-<h1 th:text="${formTitle}">Étudiant</h1>
+<div layout:fragment="content">
 
-<div th:if="${errorMessage}" th:text="${errorMessage}"></div>
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1 th:text="${formTitle}">Ajouter un étudiant</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/students}" class="text-decoration-none">Étudiants</a>
+                        </li>
+                        <li class="breadcrumb-item active">Formulaire</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
 
-<form th:object="${student}"
-      th:action="${student.id == null} ? @{/students/add} : @{/students/edit}"
-      method="post">
+        <a th:href="@{/students}" class="btn btn-outline-secondary"
+           style="border-radius: 8px; padding: 8px 16px;">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
 
-    <input type="hidden" th:field="*{id}">
+    <!-- Message d'erreur -->
+    <div th:if="${errorMessage}" class="alert-custom alert-danger-custom">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${errorMessage}"></span>
+    </div>
 
-    <label>Nom :</label>
-    <input type="text" th:field="*{nom}" required>
+    <!-- Form card -->
+    <div class="content-card" style="max-width: 720px;">
 
-    <br><br>
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-person-plus-fill me-2 text-primary"></i>
+                Informations de l'étudiant
+            </h5>
+        </div>
 
-    <label>Prénom :</label>
-    <input type="text" th:field="*{prenom}" required>
+        <div class="p-4">
 
-    <br><br>
+            <form th:object="${student}"
+                  th:action="${student.id == null} ? @{/students/add} : @{/students/edit}"
+                  method="post">
 
-    <label>Email :</label>
-    <input type="email" th:field="*{email}">
+                <input type="hidden" th:field="*{id}">
 
-    <br><br>
+                <div class="row g-3">
 
-    <label>Téléphone :</label>
-    <input type="text" th:field="*{telephone}">
+                    <!-- Nom -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            Nom <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{nom}"
+                               placeholder="El Amrani"
+                               required>
+                    </div>
 
-    <br><br>
+                    <!-- Prénom -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            Prénom <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{prenom}"
+                               placeholder="Youssef"
+                               required>
+                    </div>
 
-    <label>Moyenne :</label>
-    <input type="number" step="0.01" min="0" max="20" th:field="*{average}">
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input type="email"
+                               class="form-control"
+                               th:field="*{email}"
+                               placeholder="etudiant@school.com">
+                    </div>
 
-    <br><br>
+                    <!-- Téléphone -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Téléphone</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{telephone}"
+                               placeholder="06 00 00 00 00">
+                    </div>
 
-    <label>Classe :</label>
-    <select th:field="*{classe}">
-        <option value="">-- Aucune classe --</option>
-        <option th:each="c : ${classes}"
-                th:value="${c.id}"
-                th:text="${c.nom}">
-        </option>
-    </select>
+                    <!-- Moyenne -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Moyenne</label>
+                        <input type="number"
+                               class="form-control"
+                               th:field="*{average}"
+                               step="0.01"
+                               min="0"
+                               max="20"
+                               placeholder="15.5">
+                        <small class="text-muted">Entre 0 et 20</small>
+                    </div>
 
-    <br><br>
+                    <!-- Classe -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Classe</label>
+                        <select class="form-select" th:field="*{classe}">
+                            <option value="">-- Aucune classe --</option>
+                            <option th:each="c : ${classes}"
+                                    th:value="${c.id}"
+                                    th:text="${c.nom}">
+                                Classe
+                            </option>
+                        </select>
+                    </div>
 
-    <button type="submit">Enregistrer</button>
-    <a th:href="@{/students}">Annuler</a>
+                </div>
 
-</form>
+                <!-- Boutons -->
+                <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="bi bi-check-lg"></i>
+                        <span th:text="${student.id != null} ? 'Modifier' : 'Ajouter'">Enregistrer</span>
+                    </button>
+
+                    <a th:href="@{/students}" class="btn btn-outline-secondary"
+                       style="border-radius: 8px;">
+                        <i class="bi bi-x-lg"></i> Annuler
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
 
 </body>
-
 </html>

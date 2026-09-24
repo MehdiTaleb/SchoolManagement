@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>Formulaire note</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1 th:text="${formTitle} ?: 'Ajouter une note'">Ajouter une note</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/notes}" class="text-decoration-none">Notes</a>
+                        </li>
+                        <li class="breadcrumb-item active">Formulaire</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <a th:href="@{/notes}" class="btn btn-outline-secondary"
+           style="border-radius: 8px; padding: 8px 16px;">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
+
+    <!-- Erreur -->
+    <div th:if="${errorMessage}" class="alert-custom alert-danger-custom">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Form card -->
+    <div class="content-card" style="max-width: 720px;">
+
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-clipboard-plus me-2 text-primary"></i>
+                Informations de la note
+            </h5>
+        </div>
+
+        <div class="p-4">
+
+            <form th:action="@{${note.id != null} ? '/notes/edit' : '/notes/add'}"
+                  th:object="${note}"
+                  method="post">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="row g-3">
+
+                    <!-- Étudiant -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            Étudiant <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" th:field="*{student}" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option th:each="s : ${students}"
+                                    th:value="${s.id}"
+                                    th:text="${s.nom + ' ' + s.prenom}">
+                                Étudiant
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Matière -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            Matière <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" th:field="*{matiere}" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option th:each="m : ${matieres}"
+                                    th:value="${m.id}"
+                                    th:text="${m.nom + ' (' + m.code + ')'}">
+                                Matière
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Valeur -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            Note <span class="text-danger">*</span>
+                        </label>
+                        <input type="number"
+                               class="form-control"
+                               th:field="*{valeur}"
+                               step="0.01"
+                               min="0"
+                               max="20"
+                               placeholder="15.5"
+                               required>
+                        <small class="text-muted">Entre 0 et 20</small>
+                    </div>
+
+                    <!-- Type -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Type d'évaluation</label>
+                        <select class="form-select" th:field="*{type}">
+                            <option value="">-- Sélectionner --</option>
+                            <option th:each="t : ${T(net.mehdi.schoolmanagement.model.TypeNote).values()}"
+                                    th:value="${t}"
+                                    th:text="${t.label}">
+                                Type
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Date d'évaluation</label>
+                        <input type="date"
+                               class="form-control"
+                               th:field="*{dateEvaluation}">
+                    </div>
+
+                </div>
+
+                <!-- Boutons -->
+                <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="bi bi-check-lg"></i>
+                        <span th:text="${note.id != null} ? 'Modifier' : 'Ajouter'">Enregistrer</span>
+                    </button>
+
+                    <a th:href="@{/notes}" class="btn btn-outline-secondary"
+                       style="border-radius: 8px;">
+                        <i class="bi bi-x-lg"></i> Annuler
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

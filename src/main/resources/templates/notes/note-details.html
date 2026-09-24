@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>Détails de la note</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1>Détails de la note</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/}" class="text-decoration-none">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/notes}" class="text-decoration-none">Notes</a>
+                        </li>
+                        <li class="breadcrumb-item active">Détails</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a th:href="@{/notes}" class="btn btn-outline-secondary"
+               style="border-radius: 8px; padding: 8px 16px;">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+            <a th:href="@{/notes/edit/{id}(id=${note.id})}"
+               class="btn btn-primary-custom">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+        </div>
+    </div>
+
+    <div class="content-card" style="max-width: 800px;">
+
+        <div class="content-card-header">
+            <h5>
+                <i class="bi bi-clipboard-data me-2 text-primary"></i>
+                Informations
+            </h5>
+        </div>
+
+        <div class="p-4">
+
+            <!-- En-tête note -->
+            <div class="d-flex align-items-center justify-content-between mb-4 pb-4 border-bottom">
+                <div class="d-flex align-items-center">
+                    <div class="avatar"
+                         style="width: 72px; height: 72px; font-size: 1.5rem;"
+                         th:text="${#strings.substring(note.student.nom, 0, 1) + #strings.substring(note.student.prenom, 0, 1)}">
+                        AB
+                    </div>
+                    <div class="ms-3">
+                        <h3 class="mb-1"
+                            th:text="${note.student.nom + ' ' + note.student.prenom}">
+                            Nom Prénom
+                        </h3>
+                        <span class="badge-soft badge-soft-warning"
+                              th:text="${note.matiere.nom}">
+                            Matière
+                        </span>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="badge-soft"
+                          style="font-size: 1.4rem; padding: 10px 20px;"
+                          th:classappend="${note.valeur != null ?
+                                          (note.valeur >= 14 ? 'badge-soft-success' :
+                                          (note.valeur >= 10 ? 'badge-soft-primary' : 'badge-soft-danger')) :
+                                          'badge-soft-gray'}"
+                          th:text="${note.valeur != null ? note.valeur + '/20' : 'N/A'}">
+                        15/20
+                    </span>
+                </div>
+            </div>
+
+            <!-- Champs -->
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">ID</label>
+                    <p class="mb-0 fw-semibold" th:text="'#' + ${note.id}">#0</p>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Type d'évaluation</label>
+                    <p class="mb-0 fw-semibold"
+                       th:text="${note.type != null ? note.type.label : 'Non précisé'}">
+                        Contrôle
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Date d'évaluation</label>
+                    <p class="mb-0 fw-semibold">
+                        <i class="bi bi-calendar me-1 text-muted"></i>
+                        <span th:text="${note.dateEvaluation} ?: 'Non précisée'">date</span>
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Créée le</label>
+                    <p class="mb-0 fw-semibold" th:text="${note.createdAt} ?: '-'">date</p>
+                </div>
+
+                <!-- Étudiant -->
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Étudiant</label>
+                    <p class="mb-0">
+                        <a th:href="@{/students/{id}/details(id=${note.student.id})}"
+                           class="text-decoration-none fw-semibold">
+                            <i class="bi bi-person me-1"></i>
+                            <span th:text="${note.student.nom + ' ' + note.student.prenom}">
+                                Nom
+                            </span>
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Matière -->
+                <div class="col-md-6">
+                    <label class="text-muted small fw-semibold text-uppercase">Matière</label>
+                    <p class="mb-0">
+                        <a th:href="@{/matieres/{id}/details(id=${note.matiere.id})}"
+                           class="text-decoration-none fw-semibold">
+                            <i class="bi bi-book me-1"></i>
+                            <span th:text="${note.matiere.nom}">Matière</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                <a th:href="@{/notes/edit/{id}(id=${note.id})}"
+                   class="btn btn-primary-custom">
+                    <i class="bi bi-pencil"></i> Modifier
+                </a>
+
+                <a th:href="@{/notes/delete/{id}(id=${note.id})}"
+                   class="btn btn-outline-danger"
+                   style="border-radius: 8px;"
+                   onclick="return confirm('Voulez-vous vraiment supprimer cette note ?');">
+                    <i class="bi bi-trash"></i> Supprimer
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

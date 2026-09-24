@@ -1,8 +1,10 @@
 package net.mehdi.schoolmanagement.controller;
 
 import net.mehdi.schoolmanagement.model.Classe;
+import net.mehdi.schoolmanagement.model.Note;
 import net.mehdi.schoolmanagement.model.Student;
 import net.mehdi.schoolmanagement.service.ClasseService;
+import net.mehdi.schoolmanagement.service.NoteService;
 import net.mehdi.schoolmanagement.service.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,9 @@ import java.util.Optional;
 @RequestMapping("/students")
 public class StudentController {
 
-    @Autowired
-    private StudentService studentService;
-
-    @Autowired
-    private ClasseService classeService;
+    @Autowired private StudentService studentService;
+    @Autowired private ClasseService classeService;
+    @Autowired private NoteService noteService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -160,5 +160,27 @@ public class StudentController {
         }
 
         return "redirect:/students";
+    }
+
+    @GetMapping("/{id}/notes")
+    public String studentNotes(@PathVariable Long id, Model model) {
+
+        Optional<Student> student = studentService.getStudentById(id);
+
+        if (student.isEmpty()) {
+            return "redirect:/students";
+        }
+
+        Student s = student.get();
+        List<Note> notes = noteService.getNotesByStudent(id);
+
+        // Calcul de la moyenne pondérée
+        Double average = noteService.getWeightedAverageByStudent(id);
+
+        model.addAttribute("student", s);
+        model.addAttribute("notes", notes);
+        model.addAttribute("average", average);
+
+        return "students/student-notes";
     }
 }

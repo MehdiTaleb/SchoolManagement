@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "students") @AllArgsConstructor @NoArgsConstructor @Getter @Setter @ToString
@@ -31,6 +33,10 @@ public class Student {
     @JoinColumn(name = "classe_id")
     @ToString.Exclude
     private Classe classe;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Note> notes = new ArrayList<>();
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

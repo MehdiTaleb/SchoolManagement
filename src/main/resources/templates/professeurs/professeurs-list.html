@@ -48,56 +48,6 @@
         <span th:text="${errorMessage}"></span>
     </div>
 
-    <!-- Stat cards -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-primary-soft">
-                    <i class="bi bi-person-badge-fill"></i>
-                </div>
-                <div>
-                    <h3 th:text="${professeurs != null ? professeurs.size() : 0}">0</h3>
-                    <p>Total professeurs</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-success-soft">
-                    <i class="bi bi-book-fill"></i>
-                </div>
-                <div>
-                    <h3>Matières</h3>
-                    <p>Enseignées</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-warning-soft">
-                    <i class="bi bi-building"></i>
-                </div>
-                <div>
-                    <h3>Classes</h3>
-                    <p>Assignées</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-info-soft">
-                    <i class="bi bi-award-fill"></i>
-                </div>
-                <div>
-                    <h3>Actifs</h3>
-                    <p>En service</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Table card -->
     <div class="content-card">
