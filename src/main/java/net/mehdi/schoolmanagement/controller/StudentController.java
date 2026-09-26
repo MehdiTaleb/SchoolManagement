@@ -43,11 +43,10 @@ public class StudentController {
 
     @GetMapping
     public String listStudents(Model model) {
-        List<Student> students = studentService.getAllStudents();
-        model.addAttribute("students", students);
+        model.addAttribute("students", studentService.getAllStudents());
+        model.addAttribute("classes", classeService.getAllClasses());   // ✅ AJOUTER
         return "students/students-list";
     }
-
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("student", new Student());
@@ -140,10 +139,9 @@ public class StudentController {
 
     @GetMapping("/search")
     public String searchStudents(@RequestParam String keyword, Model model) {
-
-        List<Student> students = studentService.searchByNom(keyword);
-        model.addAttribute("students", students);
+        model.addAttribute("students", studentService.searchByNom(keyword));
         model.addAttribute("keyword", keyword);
+        model.addAttribute("classes", classeService.getAllClasses());   // ✅ AJOUTER
         return "students/students-list";
     }
 
@@ -182,5 +180,25 @@ public class StudentController {
         model.addAttribute("average", average);
 
         return "students/student-notes";
+    }
+
+    @GetMapping("/filter")
+    public String filterByClasse(
+            @RequestParam(required = false) Long classeId,
+            Model model) {
+
+        List<Student> students;
+
+        if (classeId == null) {
+            students = studentService.getAllStudents();
+        } else {
+            students = studentService.getStudentsByClasse(classeId);
+        }
+
+        model.addAttribute("students", students);
+        model.addAttribute("classes", classeService.getAllClasses());
+        model.addAttribute("selectedClasseId", classeId);   // ✅ pour garder la sélection
+
+        return "students/students-list";
     }
 }

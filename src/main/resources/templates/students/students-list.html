@@ -58,12 +58,52 @@
                 Liste complète
             </h5>
 
-            <form th:action="@{/students/search}" method="get" class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text"
-                       name="keyword"
-                       placeholder="Rechercher par nom..."
-                       th:value="${keyword}">
+            <form th:action="@{/students/filter}" method="get"
+                  class="d-flex gap-2 align-items-center flex-wrap">
+
+                <div class="content-card-header">
+
+                    <div class="d-flex gap-2 align-items-center flex-wrap">
+
+                        <!-- Filtre par classe -->
+                        <form th:action="@{/students/filter}" method="get">
+                            <div class="search-box">
+                                <i class="bi bi-building"></i>
+                                <select name="classeId"
+                                        class="form-select"
+                                        style="padding-left: 38px; height: 40px; border-radius: 8px; min-width: 200px;"
+                                        onchange="this.form.submit()">
+                                    <option value="">Toutes les classes</option>
+                                    <option th:each="c : ${classes}"
+                                            th:value="${c.id}"
+                                            th:text="${c.nom}"
+                                            th:selected="${selectedClasseId != null and selectedClasseId == c.id}">
+                                        Classe
+                                    </option>
+                                </select>
+                            </div>
+                        </form>
+
+                        <!-- Recherche par nom -->
+                        <form th:action="@{/students/search}" method="get" class="search-box">
+                            <i class="bi bi-search"></i>
+                            <input type="text"
+                                   name="keyword"
+                                   placeholder="Rechercher par nom..."
+                                   th:value="${keyword}">
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- Bouton reset -->
+                <a th:if="${selectedClasseId != null}"
+                   th:href="@{/students}"
+                   class="btn btn-outline-secondary"
+                   style="border-radius: 8px; height: 40px; display: inline-flex; align-items: center;">
+                    <i class="bi bi-x-lg me-1"></i> Réinitialiser
+                </a>
+
             </form>
         </div>
 

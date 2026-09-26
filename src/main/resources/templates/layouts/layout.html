@@ -22,7 +22,6 @@
 
 <body>
 
-<!-- ========== SIDEBAR ========== -->
 <aside class="sidebar" id="sidebar">
     <a href="#" class="brand">
         <i class="bi bi-mortarboard-fill"></i>
@@ -30,27 +29,42 @@
     </a>
 
     <nav class="nav flex-column mt-3">
-        <a class="nav-link" th:href="@{/}">
+
+        <!-- Dashboard -->
+        <a class="nav-link"
+           th:classappend="${currentUri == '/'} ? 'active'"
+           th:href="@{/}">
             <i class="bi bi-speedometer2"></i> Dashboard
         </a>
-        <a class="nav-link" th:href="@{/students}">
+
+        <!-- Étudiants -->
+        <a class="nav-link"
+           th:classappend="${#strings.startsWith(currentUri, '/students')} ? 'active'"
+           th:href="@{/students}">
             <i class="bi bi-people-fill"></i> Étudiants
         </a>
-        <a class="nav-link" th:href="@{/classes}">
+
+        <!-- Classes -->
+        <a class="nav-link"
+           th:classappend="${#strings.startsWith(currentUri, '/classes')} ? 'active'"
+           th:href="@{/classes}">
             <i class="bi bi-building"></i> Classes
         </a>
 
-        <a class="nav-link" th:href="@{/professeurs}">
+        <!-- Professeurs -->
+        <a class="nav-link"
+           th:classappend="${#strings.startsWith(currentUri, '/professeurs')} ? 'active'"
+           th:href="@{/professeurs}">
             <i class="bi bi-person-badge-fill"></i> Professeurs
         </a>
 
-        <a class="nav-link" th:href="@{/matieres}">
+        <!-- Matières -->
+        <a class="nav-link"
+           th:classappend="${#strings.startsWith(currentUri, '/matieres')} ? 'active'"
+           th:href="@{/matieres}">
             <i class="bi bi-book-fill"></i> Matières
         </a>
 
-        <!-- class="nav-link" th:href="@{/grades}">
-            <i class="bi bi-clipboard-data"></i> Notes
-        </a> -->
     </nav>
 </aside>
 
